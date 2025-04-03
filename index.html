@@ -79,20 +79,48 @@
             text-align: center;
             padding-top: 100px;
         }
+        .deposit-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .deposit-form label {
+            margin-bottom: 5px;
+        }
+        .deposit-form input {
+            margin-bottom: 15px;
+        }
+        .deposit-history {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .deposit-history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .deposit-history table, th, td {
+            border: 1px solid #ddd;
+        }
+        .deposit-history th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        .deposit-history .status {
+            color: green;
+        }
+        .deposit-history .pending {
+            color: orange;
+        }
+        .deposit-history .rejected {
+            color: red;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Inicio de sesión -->
-    <div class="container" id="login-screen">
-        <h1>Inicio de Sesión</h1>
-        <input type="text" id="username" placeholder="Usuario" />
-        <input type="password" id="password" placeholder="Contraseña" />
-        <button onclick="login()">Iniciar Sesión</button>
-    </div>
-
-    <!-- Pantalla Principal -->
-    <div class="background" id="welcome-screen" style="display:none;">
+    <!-- Menú y Pantalla Principal -->
+    <div class="background" id="welcome-screen">
         <!-- Menú desplegable -->
         <div class="menu-icon" onclick="toggleMenu(event)">
             <span style="font-size: 30px;">&#9776; Menú</span>
@@ -100,7 +128,7 @@
         <div class="menu" id="menu">
             <ul>
                 <li onclick="showProfile()">Perfil</li>
-                <li>Depósitos</li>
+                <li onclick="showDeposits()">Depósitos</li>
                 <li>Retiros</li>
                 <li>Referidos</li>
                 <li>Términos y Condiciones</li>
@@ -110,48 +138,130 @@
         <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
     </div>
 
-    <!-- Perfil -->
-    <div class="container" id="profile-screen" style="display:none;">
-        <h2>Perfil</h2>
-        <label>Nombre y Apellidos:</label>
-        <input type="text" id="profile-name" value="Brian Gabriel" readonly />
+    <!-- Depósitos -->
+    <div class="container" id="deposits-screen" style="display:none;">
+        <h2>Depósitos</h2>
         
-        <label>Edad:</label>
-        <input type="number" id="profile-age" value="28" readonly />
-        
-        <label>País:</label>
-        <input type="text" id="profile-country" value="Argentina" readonly />
-        
-        <label>Número de Celular:</label>
-        <input type="text" id="profile-phone" value="123456789" readonly />
-        
-        <label>Contraseña de Retiro:</label>
-        <input type="password" id="profile-withdrawal-password" value="******" readonly />
-        
-        <button class="green" onclick="editProfile()">Editar</button>
-        <button class="red" onclick="saveProfile()">Guardar</button>
+        <!-- Formulario de Depósito -->
+        <div class="deposit-form">
+            <label>Selecciona el tipo de depósito:</label>
+            <select id="deposit-type" onchange="toggleDepositForm()">
+                <option value="ARS">Pesos Argentinos (ARS)</option>
+                <option value="USDT">USDT</option>
+            </select>
+            
+            <!-- Formulario para Pesos Argentinos -->
+            <div id="ars-form" style="display:block;">
+                <label>Monto a Depositar (ARS):</label>
+                <input type="number" id="ars-amount" placeholder="Monto" />
+                
+                <label>CBU:</label>
+                <input type="text" id="ars-cbu" placeholder="CBU" />
+                
+                <label>Nombre del Remitente:</label>
+                <input type="text" id="ars-sender-name" placeholder="Nombre" />
+                
+                <label>Tiempo de Acreditación:</label>
+                <input type="text" value="15 min - 48 hs" readonly />
+                
+                <button class="green" onclick="submitDeposit('ARS')">Realizar Depósito</button>
+            </div>
+            
+            <!-- Formulario para USDT -->
+            <div id="usdt-form" style="display:none;">
+                <label>Monto a Depositar (USDT):</label>
+                <input type="number" id="usdt-amount" placeholder="Monto" />
+                
+                <label>Selecciona la Red:</label>
+                <select id="usdt-network">
+                    <option value="BEP20">BEP20</option>
+                    <option value="TRC20">TRC20</option>
+                </select>
+                
+                <label>Dirección de Depósito:</label>
+                <input type="text" id="usdt-address" value="0x1234567890abcdef" readonly />
+                <button onclick="copyAddress()">Copiar Dirección</button>
+                
+                <button class="green" onclick="submitDeposit('USDT')">Realizar Depósito</button>
+            </div>
+        </div>
+
+        <!-- Historial de Depósitos -->
+        <div class="deposit-history">
+            <h3>Historial de Depósitos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cantidad</th>
+                        <th>Moneda</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="deposit-history-list">
+                    <tr>
+                        <td>15,000 ARS</td>
+                        <td>ARS</td>
+                        <td>03/04/2025</td>
+                        <td class="status">Completo</td>
+                    </tr>
+                    <tr>
+                        <td>10 USDT</td>
+                        <td>USDT</td>
+                        <td>02/04/2025</td>
+                        <td class="pending">Pendiente</td>
+                    </tr>
+                    <tr>
+                        <td>20,000 ARS</td>
+                        <td>ARS</td>
+                        <td>01/04/2025</td>
+                        <td class="rejected">Rechazado</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        // Función de login
-        function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            if (username === "Brian95s" && password === "Demian31") {
-                document.getElementById("user-name").innerText = username;
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("welcome-screen").style.display = "block";
+        // Función para mostrar el formulario de depósito
+        function toggleDepositForm() {
+            const depositType = document.getElementById("deposit-type").value;
+            if (depositType === "ARS") {
+                document.getElementById("ars-form").style.display = "block";
+                document.getElementById("usdt-form").style.display = "none";
             } else {
-                alert("Usuario o contraseña incorrectos.");
+                document.getElementById("ars-form").style.display = "none";
+                document.getElementById("usdt-form").style.display = "block";
             }
         }
 
-        // Función de logout
-        function logout() {
-            document.getElementById("login-screen").style.display = "block";
+        // Función para realizar un depósito
+        function submitDeposit(type) {
+            if (type === 'ARS') {
+                const amount = document.getElementById("ars-amount").value;
+                const cbu = document.getElementById("ars-cbu").value;
+                const senderName = document.getElementById("ars-sender-name").value;
+                alert(`Depósito de ${amount} ARS realizado exitosamente.`);
+            } else if (type === 'USDT') {
+                const amount = document.getElementById("usdt-amount").value;
+                const network = document.getElementById("usdt-network").value;
+                const address = document.getElementById("usdt-address").value;
+                alert(`Depósito de ${amount} USDT realizado en red ${network}.`);
+            }
+        }
+
+        // Función para copiar la dirección de USDT
+        function copyAddress() {
+            const addressField = document.getElementById("usdt-address");
+            addressField.select();
+            document.execCommand("copy");
+            alert("Dirección copiada al portapapeles.");
+        }
+
+        // Mostrar pantalla de depósitos
+        function showDeposits() {
             document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("profile-screen").style.display = "none";
+            document.getElementById("deposits-screen").style.display = "block";
         }
 
         // Toggle del menú
@@ -170,28 +280,6 @@
                 menu.style.display = "none"; // Cerrar el menú si el clic es fuera del menú y el ícono
             }
         });
-
-        // Función para mostrar el perfil
-        function showProfile() {
-            document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("profile-screen").style.display = "block";
-        }
-
-        // Función para editar perfil
-        function editProfile() {
-            document.getElementById("profile-name").removeAttribute("readonly");
-            document.getElementById("profile-age").removeAttribute("readonly");
-            document.getElementById("profile-country").removeAttribute("readonly");
-            document.getElementById("profile-phone").removeAttribute("readonly");
-            document.getElementById("profile-withdrawal-password").removeAttribute("readonly");
-        }
-
-        // Función para guardar perfil
-        function saveProfile() {
-            alert("Perfil guardado con éxito.");
-            document.getElementById("profile-screen").style.display = "none";
-            document.getElementById("welcome-screen").style.display = "block";
-        }
     </script>
 
 </body>
