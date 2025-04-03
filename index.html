@@ -3,142 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash New - Ingreso, Registro y Recuperación</title>
+    <title>Cash Exprés - Plataforma</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background: url('https://via.placeholder.com/1920x1080') no-repeat center center/cover;
-            color: white;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
         .container {
-            width: 300px;
+            width: 90%;
+            max-width: 400px;
             margin: auto;
-            margin-top: 100px;
+            background: white;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 100px;
         }
-        input, button {
+        h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+        input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border: none;
             border-radius: 5px;
-        }
-        input {
-            background: #fff;
-            color: #000;
+            border: 1px solid #ccc;
         }
         button {
-            background-color: #f39c12;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
             color: white;
-            font-size: 16px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #e67e22;
+        p {
+            text-align: center;
+        }
+        .menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: center;
+        }
+        .menu img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        .menu-icon {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .menu-icon img {
+            width: 30px;
+            height: 30px;
+        }
+        .background {
+            background-color: #87CEEB;
+            height: 100vh;
+        }
+        #welcome-screen {
+            text-align: center;
+            padding-top: 150px;
+        }
+        #welcome-screen h1 {
+            font-size: 36px;
+            color: #fff;
+        }
+        .container a {
+            color: #007bff;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="login-container">
-        <h1>Iniciar Sesión</h1>
-        <input type="text" id="username" placeholder="Usuario" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
+    <!-- Inicio de sesión -->
+    <div class="container" id="login-screen">
+        <h1>Inicio de Sesión</h1>
+        <input type="text" id="username" placeholder="Usuario" />
+        <input type="password" id="password" placeholder="Contraseña" />
         <button onclick="login()">Iniciar Sesión</button>
-        <p><a href="javascript:void(0)" onclick="showRecoveryForm()">¿Olvidaste tu contraseña?</a></p>
-        <p><a href="javascript:void(0)" onclick="showRegistrationForm()">¿No tienes cuenta? Regístrate</a></p>
+        <p><a href="javascript:void(0);" onclick="showRegister()">¿No tienes cuenta? Regístrate</a></p>
+        <p><a href="javascript:void(0);" onclick="showForgotPassword()">¿Olvidaste tu contraseña?</a></p>
     </div>
 
-    <!-- Formulario de Recuperación de Contraseña -->
-    <div class="container" id="recovery-container" style="display:none;">
-        <h1>Recuperación de Contraseña</h1>
-        <input type="email" id="recovery-email" placeholder="Correo Electrónico" required>
-        <button onclick="recoverPassword()">Recuperar Contraseña</button>
-        <p><a href="javascript:void(0)" onclick="showLoginForm()">Volver al inicio de sesión</a></p>
+    <!-- Registro -->
+    <div class="container" id="register-screen" style="display:none;">
+        <h1>Registro</h1>
+        <input type="email" id="register-email" placeholder="Correo Electrónico" />
+        <input type="text" id="register-username" placeholder="Usuario" />
+        <input type="password" id="register-password" placeholder="Contraseña" />
+        <button onclick="register()">Registrarse</button>
+        <p><a href="javascript:void(0);" onclick="showLogin()">¿Ya tienes cuenta? Inicia sesión</a></p>
     </div>
 
-    <!-- Formulario de Registro -->
-    <div class="container" id="registration-container" style="display:none;">
-        <h1>Registrarse</h1>
-        <input type="text" id="register-username" placeholder="Usuario" required>
-        <input type="email" id="register-email" placeholder="Correo Electrónico" required>
-        <input type="password" id="register-password" placeholder="Contraseña" required>
-        <button onclick="register()">Registrar</button>
-        <p><a href="javascript:void(0)" onclick="showLoginForm()">Volver al inicio de sesión</a></p>
+    <!-- Recuperación de Contraseña -->
+    <div class="container" id="forgot-password-screen" style="display:none;">
+        <h1>Recuperar Contraseña</h1>
+        <input type="email" id="forgot-email" placeholder="Correo Electrónico" />
+        <button onclick="sendRecoveryLink()">Enviar enlace de recuperación</button>
+        <p><a href="javascript:void(0);" onclick="showLogin()">Volver al inicio de sesión</a></p>
+    </div>
+
+    <!-- Pantalla Principal (después de loguearse) -->
+    <div class="background" id="welcome-screen" style="display:none;">
+        <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
+        <div class="menu">
+            <img src="https://via.placeholder.com/50" alt="Logo Persona" />
+            <div class="menu-icon">
+                <img src="https://via.placeholder.com/30x30" alt="Menú" />
+            </div>
+        </div>
     </div>
 
     <script>
-        // Muestra el formulario de inicio de sesión
-        function showLoginForm() {
-            document.getElementById('login-container').style.display = 'block';
-            document.getElementById('recovery-container').style.display = 'none';
-            document.getElementById('registration-container').style.display = 'none';
+        // Variables
+        let currentUser = null;
+
+        // Función para mostrar la pantalla de login
+        function showLogin() {
+            document.getElementById("login-screen").style.display = "block";
+            document.getElementById("register-screen").style.display = "none";
+            document.getElementById("forgot-password-screen").style.display = "none";
+            document.getElementById("welcome-screen").style.display = "none";
         }
 
-        // Muestra el formulario de recuperación de contraseña
-        function showRecoveryForm() {
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('recovery-container').style.display = 'block';
-            document.getElementById('registration-container').style.display = 'none';
+        // Función para mostrar la pantalla de registro
+        function showRegister() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("register-screen").style.display = "block";
+            document.getElementById("forgot-password-screen").style.display = "none";
         }
 
-        // Muestra el formulario de registro
-        function showRegistrationForm() {
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('recovery-container').style.display = 'none';
-            document.getElementById('registration-container').style.display = 'block';
+        // Función para mostrar la pantalla de recuperación de contraseña
+        function showForgotPassword() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("register-screen").style.display = "none";
+            document.getElementById("forgot-password-screen").style.display = "block";
         }
 
-        // Función para iniciar sesión
+        // Función para loguearse
         function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (username === 'Brian95s' && password === 'Demian31') {
-                alert('Bienvenido al Panel de Control');
-                // Redirigir a la página del panel de administración aquí
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username === "Brian95s" && password === "Demian31") {
+                currentUser = username;
+                showWelcomeScreen();
             } else {
-                alert('Usuario o contraseña incorrectos');
+                alert("Usuario o contraseña incorrectos");
             }
         }
 
-        // Función para registrar usuario (simulada)
+        // Función para registrar
         function register() {
-            const username = document.getElementById('register-username').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            
-            // Aquí deberías realizar el registro en tu base de datos
-            alert(`Usuario ${username} registrado correctamente con el correo ${email}`);
-            showLoginForm();
+            const email = document.getElementById("register-email").value;
+            const username = document.getElementById("register-username").value;
+            const password = document.getElementById("register-password").value;
+
+            // Lógica de registro aquí (simulada)
+            alert("Registro exitoso. Ahora puedes iniciar sesión.");
+            showLogin();
         }
 
-        // Función para recuperar la contraseña (simulada)
-        function recoverPassword() {
-            const email = document.getElementById('recovery-email').value;
-            
-            // Aquí deberías hacer el envío de la notificación al administrador
-            alert('Se ha enviado una solicitud de recuperación. El administrador será notificado.');
-            
-            // Simulación de notificación al administrador (backend)
-            fetch('/send-recovery-request', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Solicitud enviada al administrador');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        // Función para enviar el enlace de recuperación de contraseña
+        function sendRecoveryLink() {
+            const email = document.getElementById("forgot-email").value;
+            alert("Te hemos enviado un enlace de recuperación a " + email);
+            showLogin();
         }
+
+        // Función para mostrar la pantalla de bienvenida
+        function showWelcomeScreen() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("register-screen").style.display = "none";
+            document.getElementById("forgot-password-screen").style.display = "none";
+            document.getElementById("welcome-screen").style.display = "block";
+            document.getElementById("user-name").textContent = currentUser;
+        }
+
+        // Inicializar la página en pantalla de login
+        showLogin();
     </script>
 </body>
 </html>
