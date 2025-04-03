@@ -48,13 +48,21 @@
         .menu {
             position: absolute;
             top: 20px;
-            right: 20px;
-            text-align: center;
+            left: 20px;
+            text-align: left;
+            display: block;
         }
-        .menu img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+        .menu li {
+            padding: 10px;
+            background-color: #28a745;
+            margin-bottom: 5px;
+            list-style-type: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+        .menu li:hover {
+            background-color: #218838;
         }
         .menu-icon {
             margin-top: 10px;
@@ -79,6 +87,19 @@
         .container a {
             color: #007bff;
             text-decoration: none;
+        }
+        .user-info {
+            display: none;
+            position: absolute;
+            top: 100px;
+            left: 70px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .user-info p {
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -114,18 +135,31 @@
 
     <!-- Pantalla Principal (después de loguearse) -->
     <div class="background" id="welcome-screen" style="display:none;">
-        <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
         <div class="menu">
-            <img src="https://via.placeholder.com/50" alt="Logo Persona" />
-            <div class="menu-icon">
-                <img src="https://via.placeholder.com/30x30" alt="Menú" />
-            </div>
+            <ul>
+                <li onclick="showUserInfo()">Mi Información</li>
+                <li>Perfil</li>
+                <li>Depósitos</li>
+                <li>Retiros</li>
+                <li>Referidos</li>
+                <li>Términos y Condiciones</li>
+            </ul>
+        </div>
+        <div class="user-info" id="user-info">
+            <p><strong>Nombre:</strong> <span id="user-full-name">Usuario</span></p>
+            <p><strong>Fecha de Registro:</strong> <span id="user-registration-date">01/01/2023</span></p>
+            <button onclick="hideUserInfo()">Cerrar</button>
+        </div>
+        <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
+        <div class="menu-icon">
+            <span style="font-size: 40px;">👤</span>
         </div>
     </div>
 
     <script>
         // Variables
         let currentUser = null;
+        let registrationDate = "01/01/2023"; // Fecha de registro simulada
 
         // Función para mostrar la pantalla de login
         function showLogin() {
@@ -187,6 +221,18 @@
             document.getElementById("forgot-password-screen").style.display = "none";
             document.getElementById("welcome-screen").style.display = "block";
             document.getElementById("user-name").textContent = currentUser;
+        }
+
+        // Función para mostrar la información del usuario
+        function showUserInfo() {
+            document.getElementById("user-info").style.display = "block";
+            document.getElementById("user-full-name").textContent = currentUser;
+            document.getElementById("user-registration-date").textContent = registrationDate;
+        }
+
+        // Función para ocultar la información del usuario
+        function hideUserInfo() {
+            document.getElementById("user-info").style.display = "none";
         }
 
         // Inicializar la página en pantalla de login
