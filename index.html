@@ -94,7 +94,7 @@
     <!-- Pantalla Principal -->
     <div class="background" id="welcome-screen" style="display:none;">
         <!-- Menú desplegable -->
-        <div class="menu-icon" onclick="toggleMenu()">
+        <div class="menu-icon" onclick="toggleMenu(event)">
             <span style="font-size: 30px;">&#9776; Menú</span>
         </div>
         <div class="menu" id="menu">
@@ -133,6 +133,7 @@
     </div>
 
     <script>
+        // Función de login
         function login() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
@@ -146,23 +147,37 @@
             }
         }
 
+        // Función de logout
         function logout() {
             document.getElementById("login-screen").style.display = "block";
             document.getElementById("welcome-screen").style.display = "none";
             document.getElementById("profile-screen").style.display = "none";
         }
 
-        function toggleMenu() {
+        // Toggle del menú
+        function toggleMenu(event) {
+            event.stopPropagation(); // Evitar que se cierre el menú cuando se hace clic en el botón de las tres líneas
             const menu = document.getElementById("menu");
-            // Toggle visibility of the menu
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
 
+        // Cerrar el menú si haces clic fuera de él
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById("menu");
+            const menuIcon = document.querySelector(".menu-icon");
+
+            if (!menu.contains(event.target) && !menuIcon.contains(event.target)) {
+                menu.style.display = "none"; // Cerrar el menú si el clic es fuera del menú y el ícono
+            }
+        });
+
+        // Función para mostrar el perfil
         function showProfile() {
             document.getElementById("welcome-screen").style.display = "none";
             document.getElementById("profile-screen").style.display = "block";
         }
 
+        // Función para editar perfil
         function editProfile() {
             document.getElementById("profile-name").removeAttribute("readonly");
             document.getElementById("profile-age").removeAttribute("readonly");
@@ -171,12 +186,13 @@
             document.getElementById("profile-withdrawal-password").removeAttribute("readonly");
         }
 
+        // Función para guardar perfil
         function saveProfile() {
-            alert("Cargado con éxito.");
+            alert("Perfil guardado con éxito.");
             document.getElementById("profile-screen").style.display = "none";
             document.getElementById("welcome-screen").style.display = "block";
         }
     </script>
 
 </body>
-    </html>
+</html>
