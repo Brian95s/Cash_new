@@ -20,7 +20,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 100px;
+            margin-top: 50px;
         }
         h1 {
             text-align: center;
@@ -141,7 +141,29 @@
         <h1>Inicio de Sesión</h1>
         <input type="text" id="username" placeholder="Usuario" />
         <input type="password" id="password" placeholder="Contraseña" />
-        <button onclick="login()">Iniciar Sesión</button>
+        <button class="green" onclick="login()">Iniciar Sesión</button>
+        <br><br>
+        <button onclick="showRegister()">Registro</button>
+        <br><br>
+        <button onclick="showRecoverPassword()">Recuperar Contraseña</button>
+    </div>
+
+    <!-- Registro -->
+    <div class="container" id="register-screen" style="display:none;">
+        <h1>Registro</h1>
+        <input type="text" id="register-username" placeholder="Usuario" />
+        <input type="email" id="register-email" placeholder="Correo Electrónico" />
+        <input type="password" id="register-password" placeholder="Contraseña" />
+        <button class="green" onclick="register()">Registrar</button>
+        <button onclick="backToLogin()">Volver al Inicio</button>
+    </div>
+
+    <!-- Recuperación de Contraseña -->
+    <div class="container" id="recover-password-screen" style="display:none;">
+        <h1>Recuperar Contraseña</h1>
+        <input type="email" id="recover-email" placeholder="Correo Electrónico" />
+        <button class="green" onclick="recoverPassword()">Recuperar</button>
+        <button onclick="backToLogin()">Volver al Inicio</button>
     </div>
 
     <!-- Pantalla Principal -->
@@ -249,16 +271,41 @@
             }
         }
 
-        // Función para volver al menú
+        // Función para mostrar la pantalla de registro
+        function showRegister() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("register-screen").style.display = "block";
+        }
+
+        // Función para mostrar la pantalla de recuperación de contraseña
+        function showRecoverPassword() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("recover-password-screen").style.display = "block";
+        }
+
+        // Función para registrar usuario
+        function register() {
+            alert("Usuario registrado con éxito.");
+            backToLogin();
+        }
+
+        // Función para recuperar contraseña
+        function recoverPassword() {
+            alert("Recuperación de contraseña solicitada.");
+            backToLogin();
+        }
+
+        // Función para regresar a la pantalla de inicio de sesión
+        function backToLogin() {
+            document.getElementById("register-screen").style.display = "none";
+            document.getElementById("recover-password-screen").style.display = "none";
+            document.getElementById("login-screen").style.display = "block";
+        }
+
+        // Función para regresar al menú
         function backToMenu() {
             document.getElementById("profile-screen").style.display = "none";
             document.getElementById("welcome-screen").style.display = "block";
-        }
-
-        // Función de cierre de sesión
-        function logout() {
-            document.getElementById("login-screen").style.display = "block";
-            document.getElementById("welcome-screen").style.display = "none";
         }
 
         // Función para mostrar el perfil
@@ -267,55 +314,20 @@
             document.getElementById("profile-screen").style.display = "block";
         }
 
-        // Función para mostrar la pantalla de depósito
-        function showDeposit() {
+        // Función para mostrar el menú
+        function toggleMenu() {
+            const menu = document.getElementById("menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        // Función para cerrar sesión
+        function logout() {
+            alert("Has cerrado sesión.");
             document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("deposit-screen").style.display = "block";
+            document.getElementById("login-screen").style.display = "block";
         }
 
-        // Función para mostrar el historial de depósitos
-        function showDepositHistory() {
-            document.getElementById("deposit-screen").style.display = "none";
-            document.getElementById("deposit-history").style.display = "block";
-        }
-
-        // Función para copiar texto
-        function copyText(id) {
-            const copyText = document.getElementById(id);
-            copyText.select();
-            document.execCommand("copy");
-            alert("Texto copiado: " + copyText.value);
-        }
-
-        // Actualizar dirección de depósito USDT
-        function updateUSDTAddress() {
-            const network = document.getElementById("usdt-network").value;
-            const depositAddress = document.getElementById("deposit-address");
-            if (network === "BEP20") {
-                depositAddress.value = "0x9748Fbc81045609Ab16583677eB5A75c73d1DeEf";
-            } else if (network === "TRC20") {
-                depositAddress.value = "TSk2FGNVPiosWizFxNkkhWu2C9HArRvK5D";
-            }
-        }
-
-        // Cambiar campos según moneda seleccionada
-        function toggleDepositFields() {
-            const depositType = document.getElementById("deposit-type").value;
-            if (depositType === "ARS") {
-                document.getElementById("ars-fields").style.display = "block";
-                document.getElementById("usdt-fields").style.display = "none";
-            } else {
-                document.getElementById("ars-fields").style.display = "none";
-                document.getElementById("usdt-fields").style.display = "block";
-                updateUSDTAddress(); // Actualizar la dirección de USDT
-            }
-        }
-
-        // Guardar depósito (solo un ejemplo)
-        function saveDeposit() {
-            alert("Depósito guardado con éxito.");
-            // Aquí debes agregar la lógica para guardar el depósito en el historial o base de datos
-        }
     </script>
+
 </body>
-</html>
+    </html>
