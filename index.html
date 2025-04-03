@@ -1,23 +1,60 @@
-// Importar módulos const express = require('express'); const mongoose = require('mongoose'); const bcrypt = require('bcrypt'); const jwt = require('jsonwebtoken'); const cors = require('cors');
+<!DOCTYPE html><html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash New - Plataforma</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        .container { width: 300px; margin: auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Iniciar Sesión</h1>
+        <input type="email" id="email" placeholder="Correo Electrónico">
+        <input type="password" id="password" placeholder="Contraseña">
+        <button onclick="login()">Iniciar Sesión</button>
+        <p>¿No tienes cuenta? <a href="#" onclick="register()">Regístrate</a></p>
+    </div><script>
+    async function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            alert('Inicio de sesión exitoso');
+            localStorage.setItem('token', data.token);
+            window.location.href = 'dashboard.html';
+        } else {
+            alert(data.message);
+        }
+    }
 
-// Configuración const app = express(); const PORT = 3000; const SECRET_KEY = 'tu_clave_secreta';
+    async function register() {
+        const email = prompt('Ingrese su correo electrónico:');
+        const password = prompt('Ingrese su contraseña:');
+        const name = prompt('Ingrese su nombre:');
+        const age = prompt('Ingrese su edad:');
+        const country = prompt('Ingrese su país:');
+        const phone = prompt('Ingrese su número de celular:');
+        
+        const response = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, name, age, country, phone })
+        });
+        const data = await response.json();
+        alert(data.message);
+    }
+</script>
 
-app.use(express.json()); app.use(cors());
-
-// Conectar a MongoDB mongoose.connect('mongodb://localhost:27017/cashnew', { useNewUrlParser: true, useUnifiedTopology: true }).then(() => console.log('Conectado a MongoDB')).catch(err => console.error(err));
-
-// Modelo de usuario const UserSchema = new mongoose.Schema({ email: String, password: String }); const User = mongoose.model('User', UserSchema);
-
-// Registro de usuario app.post('/register', async (req, res) => { const { email, password } = req.body; const hashedPassword = await bcrypt.hash(password, 10); const user = new User({ email, password: hashedPassword }); await user.save(); res.json({ message: 'Usuario registrado' }); });
-
-// Inicio de sesión app.post('/login', async (req, res) => { const { email, password } = req.body; const user = await User.findOne({ email }); if (!user) return res.status(400).json({ message: 'Usuario no encontrado' });
-
-const isValid = await bcrypt.compare(password, user.password);
-if (!isValid) return res.status(400).json({ message: 'Contraseña incorrecta' });
-
-const token = jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: '1h' });
-res.json({ message: 'Inicio de sesión exitoso', token });
-
-});
-
-app.listen(PORT, () => console.log(Servidor corriendo en http://localhost:${PORT}));
+</body>
+</html>
