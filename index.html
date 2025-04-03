@@ -243,3 +243,31 @@
 
         // Función para mostrar la información del usuario
         function showUserInfo() {
+            document.getElementById("user-info").style.display = "block";
+            document.getElementById("user-full-name").textContent = currentUser;
+            document.getElementById("user-registration-date").textContent = registrationDate;
+        }
+
+        // Función para ocultar la información del usuario
+        function hideUserInfo() {
+            document.getElementById("user-info").style.display = "none";
+        }
+
+        // Función para mostrar u ocultar el menú
+        function toggleMenu() {
+            const menu = document.getElementById("menu");
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }
+
+        // Función para cerrar sesión
+        function logout() {
+            currentUser = null;
+            showLogin();
+        }
+    </script>
+</body>
+</html>
