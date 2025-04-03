@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Cash Exprés</title>
+    <title>Recuperación de Contraseña</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,23 +43,34 @@
 </head>
 <body>
     <div class="container">
-        <h1>Iniciar Sesión</h1>
-        <input type="text" id="username" placeholder="Usuario">
-        <input type="password" id="password" placeholder="Contraseña">
-        <button onclick="login()">Acceder</button>
+        <h1>Recuperación de Contraseña</h1>
+        <input type="email" id="email" placeholder="Correo Electrónico" required>
+        <button onclick="recoverPassword()">Recuperar Contraseña</button>
     </div>
 
     <script>
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        function recoverPassword() {
+            const email = document.getElementById('email').value;
             
-            // Verificar si los datos de inicio de sesión son correctos
-            if (username === "Brian95s" && password === "Demian31") {
-                alert("Acceso concedido");
-                window.location.href = "panel.html"; // Redirige a la página del panel
+            if (email) {
+                alert("Se ha enviado una solicitud de recuperación de contraseña. El administrador será notificado.");
+                // Aquí deberías enviar la solicitud al backend para notificar al administrador.
+                fetch('/send-recovery-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Solicitud enviada al administrador');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             } else {
-                alert("Usuario o contraseña incorrectos");
+                alert("Por favor, ingresa tu correo.");
             }
         }
     </script>
