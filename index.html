@@ -36,11 +36,18 @@
         button {
             width: 100%;
             padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button.green {
             background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        }
+        button.red {
+            background-color: #dc3545;
+            color: white;
+            border: none;
         }
         p {
             text-align: center;
@@ -114,6 +121,10 @@
         .profile-info button {
             width: auto;
         }
+        .profile-info .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
@@ -181,21 +192,24 @@
             <h2>Perfil</h2>
             <div class="profile-info">
                 <label for="profile-name">Nombre y Apellidos:</label>
-                <input type="text" id="profile-name" value="Brian Gabriel" />
+                <input type="text" id="profile-name" value="Brian Gabriel" readonly />
                 
                 <label for="profile-age">Edad:</label>
-                <input type="number" id="profile-age" value="28" />
+                <input type="number" id="profile-age" value="28" readonly />
                 
                 <label for="profile-country">País:</label>
-                <input type="text" id="profile-country" value="Argentina" />
+                <input type="text" id="profile-country" value="Argentina" readonly />
                 
                 <label for="profile-phone">Número de Celular:</label>
-                <input type="text" id="profile-phone" value="123456789" />
+                <input type="text" id="profile-phone" value="123456789" readonly />
                 
                 <label for="profile-withdrawal-password">Contraseña de Retiro:</label>
-                <input type="password" id="profile-withdrawal-password" value="******" />
+                <input type="password" id="profile-withdrawal-password" value="******" readonly />
                 
-                <button onclick="saveProfile()">Guardar</button>
+                <div class="button-container">
+                    <button class="green" onclick="editProfile()">Editar</button>
+                    <button class="red" onclick="saveProfile()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -230,66 +244,19 @@
         // Función para mostrar la pantalla de recuperación de contraseña
         function showForgotPassword() {
             document.getElementById("login-screen").style.display = "none";
-            document.getElementById("register-screen").style.display = "none";
             document.getElementById("forgot-password-screen").style.display = "block";
         }
 
-        // Función para loguearse
+        // Función para enviar enlace de recuperación (simulación)
+        function sendRecoveryLink() {
+            alert("Enlace de recuperación enviado.");
+        }
+
+        // Función para iniciar sesión
         function login() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
-            // Verificación de credenciales
+            // Simulación de inicio de sesión (usuario: Brian95s, contraseña: Demian31)
             if (username === "Brian95s" && password === "Demian31") {
-                currentUser = username;
-                showWelcomeScreen();
-            } else {
-                alert("Usuario o contraseña incorrectos");
-            }
-        }
-
-        // Función para mostrar la pantalla de bienvenida después de loguearse
-        function showWelcomeScreen() {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("welcome-screen").style.display = "block";
-            document.getElementById("user-name").textContent = currentUser;
-        }
-
-        // Función para mostrar el menú
-        function toggleMenu() {
-            const menu = document.getElementById("menu");
-            if (menu.style.display === "block") {
-                menu.style.display = "none";
-            } else {
-                menu.style.display = "block";
-            }
-        }
-
-        // Función para mostrar la información del usuario
-        function showUserInfo() {
-            document.getElementById("user-info").style.display = "block";
-        }
-
-        // Función para ocultar la información del usuario
-        function hideUserInfo() {
-            document.getElementById("user-info").style.display = "none";
-        }
-
-        // Función para mostrar el perfil
-        function showProfile() {
-            document.getElementById("profile-screen").style.display = "block";
-        }
-
-        // Función para guardar el perfil
-        function saveProfile() {
-            userInfo.name = document.getElementById("profile-name").value;
-            userInfo.age = document.getElementById("profile-age").value;
-            userInfo.country = document.getElementById("profile-country").value;
-            userInfo.phone = document.getElementById("profile-phone").value;
-            userInfo.withdrawalPassword = document.getElementById("profile-withdrawal-password").value;
-
-            alert("Perfil guardado correctamente.");
-        }
-    </script>
-</body>
-</html>
+                currentUser
