@@ -20,9 +20,10 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
+            margin-top: 100px;
         }
         h1 {
+            font-size: 24px;
             text-align: center;
         }
         input {
@@ -35,33 +36,25 @@
         button {
             width: 100%;
             padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-        }
-        button.green {
             background-color: #28a745;
             color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        button.red {
-            background-color: #dc3545;
-            color: white;
+        p {
+            text-align: center;
         }
-        .menu-icon {
+        /* Menú */
+        .menu {
             position: absolute;
             top: 20px;
             left: 20px;
-            cursor: pointer;
-        }
-        .menu {
             display: none;
-            position: absolute;
-            top: 50px;
-            left: 20px;
-            background: white;
+            background-color: #28a745;
             width: 200px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .menu ul {
             list-style: none;
@@ -70,264 +63,211 @@
         }
         .menu ul li {
             padding: 10px;
+            background-color: #28a745;
+            margin-bottom: 5px;
             cursor: pointer;
-            border-bottom: 1px solid #ccc;
+            color: white;
+            border-radius: 5px;
         }
+        .menu ul li:hover {
+            background-color: #218838;
+        }
+        /* Menú desplegable */
+        .menu-icon {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .menu-icon img {
+            width: 30px;
+            height: 30px;
+        }
+        /* Estilo para la pantalla de bienvenida */
         .background {
             background-color: #87CEEB;
             height: 100vh;
+        }
+        #welcome-screen {
             text-align: center;
-            padding-top: 100px;
+            padding-top: 150px;
         }
-
-        /* Estilos de fondo y texto para depósito e historial */
-        .deposit-container, .deposit-history {
-            background-color: #000;
+        #welcome-screen h1 {
+            font-size: 36px;
             color: #fff;
-            padding: 20px;
+        }
+        .container a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .user-info {
+            display: none;
+            position: absolute;
+            top: 100px;
+            left: 70px;
+            background-color: white;
+            padding: 10px;
             border-radius: 10px;
-            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        .deposit-history table {
-            width: 100%;
-            color: #fff;
-            border-collapse: collapse;
-        }
-
-        .deposit-history th, .deposit-history td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #fff;
-        }
-
-        .status-pending {
-            color: orange;
-        }
-
-        .status-approved {
-            color: green;
-        }
-
-        .status-rejected {
-            color: red;
-        }
-
-        .blue-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            border: none;
-            margin-top: 10px;
-        }
-
-        .copy-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 10px;
-            margin-left: 10px;
+        .user-info p {
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
 
-    <!-- Pantalla de Inicio de Sesión -->
+    <!-- Inicio de sesión -->
     <div class="container" id="login-screen">
         <h1>Inicio de Sesión</h1>
         <input type="text" id="username" placeholder="Usuario" />
         <input type="password" id="password" placeholder="Contraseña" />
-        <button class="green" onclick="login()">Iniciar Sesión</button>
-        <br><br>
-        <button onclick="showRegister()">Registro</button>
-        <br><br>
-        <button onclick="showRecoverPassword()">Recuperar Contraseña</button>
+        <button onclick="login()">Iniciar Sesión</button>
+        <p><a href="javascript:void(0);" onclick="showRegister()">¿No tienes cuenta? Regístrate</a></p>
+        <p><a href="javascript:void(0);" onclick="showForgotPassword()">¿Olvidaste tu contraseña?</a></p>
     </div>
 
     <!-- Registro -->
     <div class="container" id="register-screen" style="display:none;">
         <h1>Registro</h1>
-        <input type="text" id="register-username" placeholder="Usuario" />
         <input type="email" id="register-email" placeholder="Correo Electrónico" />
+        <input type="text" id="register-username" placeholder="Usuario" />
         <input type="password" id="register-password" placeholder="Contraseña" />
-        <button class="green" onclick="register()">Registrar</button>
-        <button onclick="backToLogin()">Volver al Inicio</button>
+        <button onclick="register()">Registrarse</button>
+        <p><a href="javascript:void(0);" onclick="showLogin()">¿Ya tienes cuenta? Inicia sesión</a></p>
     </div>
 
     <!-- Recuperación de Contraseña -->
-    <div class="container" id="recover-password-screen" style="display:none;">
+    <div class="container" id="forgot-password-screen" style="display:none;">
         <h1>Recuperar Contraseña</h1>
-        <input type="email" id="recover-email" placeholder="Correo Electrónico" />
-        <button class="green" onclick="recoverPassword()">Recuperar</button>
-        <button onclick="backToLogin()">Volver al Inicio</button>
+        <input type="email" id="forgot-email" placeholder="Correo Electrónico" />
+        <button onclick="sendRecoveryLink()">Enviar enlace de recuperación</button>
+        <p><a href="javascript:void(0);" onclick="showLogin()">Volver al inicio de sesión</a></p>
     </div>
 
-    <!-- Pantalla Principal -->
+    <!-- Pantalla Principal (después de loguearse) -->
     <div class="background" id="welcome-screen" style="display:none;">
         <!-- Menú desplegable -->
-        <div class="menu-icon" onclick="toggleMenu(event)">
+        <div class="menu-icon" onclick="toggleMenu()">
             <span style="font-size: 30px;">&#9776; Menú</span>
         </div>
         <div class="menu" id="menu">
             <ul>
-                <li onclick="showProfile()">Perfil</li>
-                <li onclick="showDeposit()">Depósitos</li>
+                <li onclick="showUserInfo()">Mi Información</li>
+                <li>Perfil</li>
+                <li>Depósitos</li>
                 <li>Retiros</li>
                 <li>Referidos</li>
                 <li>Términos y Condiciones</li>
                 <li onclick="logout()">Cerrar sesión</li>
             </ul>
         </div>
+
         <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
-    </div>
-
-    <!-- Perfil -->
-    <div class="container" id="profile-screen" style="display:none;">
-        <h2>Perfil</h2>
-        <p>Nombre de Usuario: <span id="profile-name"></span></p>
-        <p>Email: <span id="profile-email"></span></p>
-        <p>Edad: <span id="profile-age"></span></p>
-        <p>País: <span id="profile-country"></span></p>
-        <p>Celular: <span id="profile-phone"></span></p>
-        <button onclick="backToMenu()">Volver al Menú</button>
-    </div>
-
-    <!-- Depósito -->
-    <div class="container deposit-container" id="deposit-screen" style="display:none;">
-        <h2>Depósito</h2>
-        <label for="deposit-type">Selecciona Moneda:</label>
-        <select id="deposit-type" onchange="toggleDepositFields()">
-            <option value="ARS">Pesos Argentinos (ARS)</option>
-            <option value="USDT">USDT</option>
-        </select>
-
-        <!-- Pesos Argentinos -->
-        <div id="ars-fields" style="display:none;">
-            <label>Monto a Depositar (ARS):</label>
-            <input type="number" id="deposit-ars" />
-            <label>CBU para Transferencia:</label>
-            <input type="text" id="deposit-cbu" value="0070361930004017951525" readonly />
-            <button class="copy-btn" onclick="copyText('deposit-cbu')">Copiar</button>
-            <label>Nombre y Apellido de quien transfiere:</label>
-            <input type="text" id="deposit-name" />
-            <label>Tiempo estimado para que se refleje el depósito:</label>
-            <p>15 minutos a 48 horas</p>
+        <div class="menu-icon">
+            <span style="font-size: 40px;">👤</span>
         </div>
-
-        <!-- USDT -->
-        <div id="usdt-fields" style="display:none;">
-            <label>Monto a Depositar (USDT):</label>
-            <input type="number" id="deposit-usdt" />
-            <label>Selecciona Red:</label>
-            <select id="usdt-network" onchange="updateUSDTAddress()">
-                <option value="BEP20">BEP20</option>
-                <option value="TRC20">TRC20</option>
-            </select>
-            <label>Dirección para Depósito:</label>
-            <input type="text" id="deposit-address" readonly />
-            <button class="copy-btn" onclick="copyText('deposit-address')">Copiar</button>
-            <label>Tiempo estimado para que se refleje el depósito:</label>
-            <p>10 minutos a 5 horas</p>
+        
+        <!-- Información del Usuario -->
+        <div class="user-info" id="user-info">
+            <p><strong>Nombre:</strong> <span id="user-full-name">Usuario</span></p>
+            <p><strong>Fecha de Registro:</strong> <span id="user-registration-date">01/01/2023</span></p>
+            <button onclick="hideUserInfo()">Cerrar</button>
         </div>
-
-        <button class="green" onclick="saveDeposit()">Guardar</button>
-        <button class="blue-btn" onclick="showDepositHistory()">Ver Historial de Depósitos</button>
-    </div>
-
-    <!-- Historial de Depósitos -->
-    <div class="deposit-history" id="deposit-history" style="display:none;">
-        <h3>Historial de Depósitos</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Tipo de Moneda</th>
-                    <th>Monto</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody id="deposit-history-list">
-                <!-- Aquí se llenarán los depósitos -->
-            </tbody>
-        </table>
     </div>
 
     <script>
-        // Lógica de inicio de sesión
-        function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
+        // Variables
+        let currentUser = null;
+        let registrationDate = "01/01/2023"; // Fecha de registro simulada
 
-            if (username === "Brian95s" && password === "Demian31") {
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("welcome-screen").style.display = "block";
-                document.getElementById("user-name").textContent = username;
-            } else {
-                alert("Credenciales incorrectas.");
-            }
+        // Función para mostrar la pantalla de login
+        function showLogin() {
+            document.getElementById("login-screen").style.display = "block";
+            document.getElementById("register-screen").style.display = "none";
+            document.getElementById("forgot-password-screen").style.display = "none";
+            document.getElementById("welcome-screen").style.display = "none";
         }
 
         // Función para mostrar la pantalla de registro
         function showRegister() {
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("register-screen").style.display = "block";
+            document.getElementById("forgot-password-screen").style.display = "none";
         }
 
         // Función para mostrar la pantalla de recuperación de contraseña
-        function showRecoverPassword() {
+        function showForgotPassword() {
             document.getElementById("login-screen").style.display = "none";
-            document.getElementById("recover-password-screen").style.display = "block";
-        }
-
-        // Función para registrar usuario
-        function register() {
-            alert("Usuario registrado con éxito.");
-            backToLogin();
-        }
-
-        // Función para recuperar contraseña
-        function recoverPassword() {
-            alert("Recuperación de contraseña solicitada.");
-            backToLogin();
-        }
-
-        // Función para regresar a la pantalla de inicio de sesión
-        function backToLogin() {
             document.getElementById("register-screen").style.display = "none";
-            document.getElementById("recover-password-screen").style.display = "none";
-            document.getElementById("login-screen").style.display = "block";
+            document.getElementById("forgot-password-screen").style.display = "block";
         }
 
-        // Función para regresar al menú
-        function backToMenu() {
-            document.getElementById("profile-screen").style.display = "none";
+        // Función para loguearse
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username === "Brian95s" && password === "Demian31") {
+                currentUser = username;
+                showWelcomeScreen();
+            } else {
+                alert("Usuario o contraseña incorrectos");
+            }
+        }
+
+        // Función para registrar
+        function register() {
+            const email = document.getElementById("register-email").value;
+            const username = document.getElementById("register-username").value;
+            const password = document.getElementById("register-password").value;
+
+            // Lógica de registro aquí (simulada)
+            alert("Registro exitoso. Ahora puedes iniciar sesión.");
+            showLogin();
+        }
+
+        // Función para enviar el enlace de recuperación de contraseña
+        function sendRecoveryLink() {
+            const email = document.getElementById("forgot-email").value;
+            alert("Te hemos enviado un enlace de recuperación a " + email);
+            showLogin();
+        }
+
+        // Función para mostrar la pantalla de bienvenida
+        function showWelcomeScreen() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("register-screen").style.display = "none";
+            document.getElementById("forgot-password-screen").style.display = "none";
             document.getElementById("welcome-screen").style.display = "block";
+            document.getElementById("user-name").textContent = currentUser;
         }
 
-        // Función para mostrar el perfil
-        function showProfile() {
-            document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("profile-screen").style.display = "block";
+        // Función para mostrar la información del usuario
+        function showUserInfo() {
+            document.getElementById("user-info").style.display = "block";
+            document.getElementById("user-full-name").textContent = currentUser;
+            document.getElementById("user-registration-date").textContent = registrationDate;
         }
 
-        // Función para mostrar el menú
+        // Función para ocultar la información del usuario
+        function hideUserInfo() {
+            document.getElementById("user-info").style.display = "none";
+        }
+
+        // Función para mostrar u ocultar el menú
         function toggleMenu() {
             const menu = document.getElementById("menu");
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
         }
 
         // Función para cerrar sesión
         function logout() {
-            alert("Has cerrado sesión.");
-            document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("login-screen").style.display = "block";
+            currentUser = null;
+            showLogin();
         }
-
     </script>
-
 </body>
-    </html>
+</html>
