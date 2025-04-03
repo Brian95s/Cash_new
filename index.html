@@ -45,25 +45,34 @@
         p {
             text-align: center;
         }
+        /* Menú */
         .menu {
             position: absolute;
             top: 20px;
             left: 20px;
-            text-align: left;
-            display: block;
+            display: none;
+            background-color: #28a745;
+            width: 200px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .menu li {
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .menu ul li {
             padding: 10px;
             background-color: #28a745;
             margin-bottom: 5px;
-            list-style-type: none;
-            border-radius: 5px;
             cursor: pointer;
             color: white;
+            border-radius: 5px;
         }
-        .menu li:hover {
+        .menu ul li:hover {
             background-color: #218838;
         }
+        /* Menú desplegable */
         .menu-icon {
             margin-top: 10px;
             cursor: pointer;
@@ -72,6 +81,7 @@
             width: 30px;
             height: 30px;
         }
+        /* Estilo para la pantalla de bienvenida */
         .background {
             background-color: #87CEEB;
             height: 100vh;
@@ -135,7 +145,11 @@
 
     <!-- Pantalla Principal (después de loguearse) -->
     <div class="background" id="welcome-screen" style="display:none;">
-        <div class="menu">
+        <!-- Menú desplegable -->
+        <div class="menu-icon" onclick="toggleMenu()">
+            <span style="font-size: 30px;">&#9776; Menú</span>
+        </div>
+        <div class="menu" id="menu">
             <ul>
                 <li onclick="showUserInfo()">Mi Información</li>
                 <li>Perfil</li>
@@ -143,16 +157,20 @@
                 <li>Retiros</li>
                 <li>Referidos</li>
                 <li>Términos y Condiciones</li>
+                <li onclick="logout()">Cerrar sesión</li>
             </ul>
         </div>
+
+        <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
+        <div class="menu-icon">
+            <span style="font-size: 40px;">👤</span>
+        </div>
+        
+        <!-- Información del Usuario -->
         <div class="user-info" id="user-info">
             <p><strong>Nombre:</strong> <span id="user-full-name">Usuario</span></p>
             <p><strong>Fecha de Registro:</strong> <span id="user-registration-date">01/01/2023</span></p>
             <button onclick="hideUserInfo()">Cerrar</button>
-        </div>
-        <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
-        <div class="menu-icon">
-            <span style="font-size: 40px;">👤</span>
         </div>
     </div>
 
@@ -225,18 +243,3 @@
 
         // Función para mostrar la información del usuario
         function showUserInfo() {
-            document.getElementById("user-info").style.display = "block";
-            document.getElementById("user-full-name").textContent = currentUser;
-            document.getElementById("user-registration-date").textContent = registrationDate;
-        }
-
-        // Función para ocultar la información del usuario
-        function hideUserInfo() {
-            document.getElementById("user-info").style.display = "none";
-        }
-
-        // Inicializar la página en pantalla de login
-        showLogin();
-    </script>
-</body>
-</html>
