@@ -40,14 +40,12 @@
             background-color: #e67e22;
         }
     </style>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Iniciar Sesión</h1>
         <input type="text" id="username" placeholder="Usuario">
         <input type="password" id="password" placeholder="Contraseña">
-        <div class="g-recaptcha" data-sitekey="6LeIsAgrAAAAABDuHuVPPYOAyvdAILp1ZyDKAOeM"></div>
         <button onclick="login()">Acceder</button>
     </div>
 
@@ -55,16 +53,11 @@
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const captchaResponse = grecaptcha.getResponse();
             
-            if (!captchaResponse) {
-                alert("Por favor, completa el CAPTCHA");
-                return;
-            }
-            
+            // Verificar si los datos de inicio de sesión son correctos
             if (username === "Brian95s" && password === "Demian31") {
                 alert("Acceso concedido");
-                window.location.href = "panel.html"; // Redirige al panel
+                window.location.href = "panel.html"; // Redirige a la página del panel
             } else {
                 alert("Usuario o contraseña incorrectos");
             }
