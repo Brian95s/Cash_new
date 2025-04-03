@@ -1,60 +1,74 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash New - Plataforma</title>
+    <title>Iniciar Sesión - Cash Exprés</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
-        .container { width: 300px; margin: auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        input, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('https://via.placeholder.com/1920x1080') no-repeat center center/cover;
+            color: white;
+        }
+        .container {
+            width: 300px;
+            margin: auto;
+            margin-top: 100px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        input {
+            background: #fff;
+            color: #000;
+        }
+        button {
+            background-color: #f39c12;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e67e22;
+        }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Iniciar Sesión</h1>
-        <input type="email" id="email" placeholder="Correo Electrónico">
+        <input type="text" id="username" placeholder="Usuario">
         <input type="password" id="password" placeholder="Contraseña">
-        <button onclick="login()">Iniciar Sesión</button>
-        <p>¿No tienes cuenta? <a href="#" onclick="register()">Regístrate</a></p>
-    </div><script>
-    async function login() {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        const response = await fetch('http://localhost:3000/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        const data = await response.json();
-        
-        if (response.ok) {
-            alert('Inicio de sesión exitoso');
-            localStorage.setItem('token', data.token);
-            window.location.href = 'dashboard.html';
-        } else {
-            alert(data.message);
+        <div class="g-recaptcha" data-sitekey="TU_CLAVE_PUBLICA_RECAPTCHA"></div>
+        <button onclick="login()">Acceder</button>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const captchaResponse = grecaptcha.getResponse();
+            
+            if (!captchaResponse) {
+                alert("Por favor, completa el CAPTCHA");
+                return;
+            }
+            
+            if (username === "Brian95s" && password === "Demian31") {
+                alert("Acceso concedido");
+                window.location.href = "panel.html"; // Redirige al panel
+            } else {
+                alert("Usuario o contraseña incorrectos");
+            }
         }
-    }
-
-    async function register() {
-        const email = prompt('Ingrese su correo electrónico:');
-        const password = prompt('Ingrese su contraseña:');
-        const name = prompt('Ingrese su nombre:');
-        const age = prompt('Ingrese su edad:');
-        const country = prompt('Ingrese su país:');
-        const phone = prompt('Ingrese su número de celular:');
-        
-        const response = await fetch('http://localhost:3000/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, name, age, country, phone })
-        });
-        const data = await response.json();
-        alert(data.message);
-    }
-</script>
-
+    </script>
 </body>
 </html>
