@@ -93,6 +93,7 @@
 
     <!-- Pantalla Principal -->
     <div class="background" id="welcome-screen" style="display:none;">
+        <!-- Menú desplegable -->
         <div class="menu-icon" onclick="toggleMenu()">
             <span style="font-size: 30px;">&#9776; Menú</span>
         </div>
@@ -153,6 +154,7 @@
 
         function toggleMenu() {
             const menu = document.getElementById("menu");
+            // Toggle visibility of the menu
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
 
