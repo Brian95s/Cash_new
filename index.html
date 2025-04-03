@@ -136,7 +136,7 @@
 </head>
 <body>
 
-    <!-- Inicio de sesión -->
+    <!-- Pantalla de Inicio de Sesión -->
     <div class="container" id="login-screen">
         <h1>Inicio de Sesión</h1>
         <input type="text" id="username" placeholder="Usuario" />
@@ -161,6 +161,17 @@
             </ul>
         </div>
         <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
+    </div>
+
+    <!-- Perfil -->
+    <div class="container" id="profile-screen" style="display:none;">
+        <h2>Perfil</h2>
+        <p>Nombre de Usuario: <span id="profile-name"></span></p>
+        <p>Email: <span id="profile-email"></span></p>
+        <p>Edad: <span id="profile-age"></span></p>
+        <p>País: <span id="profile-country"></span></p>
+        <p>Celular: <span id="profile-phone"></span></p>
+        <button onclick="backToMenu()">Volver al Menú</button>
     </div>
 
     <!-- Depósito -->
@@ -224,20 +235,59 @@
     </div>
 
     <script>
-        // Función para cambiar los campos según la moneda seleccionada
-        function toggleDepositFields() {
-            const depositType = document.getElementById("deposit-type").value;
-            if (depositType === "ARS") {
-                document.getElementById("ars-fields").style.display = "block";
-                document.getElementById("usdt-fields").style.display = "none";
-            } else if (depositType === "USDT") {
-                document.getElementById("ars-fields").style.display = "none";
-                document.getElementById("usdt-fields").style.display = "block";
-                updateUSDTAddress(); // Actualizar la dirección de depósito de USDT
+        // Lógica de inicio de sesión
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username === "Brian95s" && password === "Demian31") {
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("welcome-screen").style.display = "block";
+                document.getElementById("user-name").textContent = username;
+            } else {
+                alert("Credenciales incorrectas.");
             }
         }
 
-        // Actualizar dirección de USDT según la red seleccionada
+        // Función para volver al menú
+        function backToMenu() {
+            document.getElementById("profile-screen").style.display = "none";
+            document.getElementById("welcome-screen").style.display = "block";
+        }
+
+        // Función de cierre de sesión
+        function logout() {
+            document.getElementById("login-screen").style.display = "block";
+            document.getElementById("welcome-screen").style.display = "none";
+        }
+
+        // Función para mostrar el perfil
+        function showProfile() {
+            document.getElementById("welcome-screen").style.display = "none";
+            document.getElementById("profile-screen").style.display = "block";
+        }
+
+        // Función para mostrar la pantalla de depósito
+        function showDeposit() {
+            document.getElementById("welcome-screen").style.display = "none";
+            document.getElementById("deposit-screen").style.display = "block";
+        }
+
+        // Función para mostrar el historial de depósitos
+        function showDepositHistory() {
+            document.getElementById("deposit-screen").style.display = "none";
+            document.getElementById("deposit-history").style.display = "block";
+        }
+
+        // Función para copiar texto
+        function copyText(id) {
+            const copyText = document.getElementById(id);
+            copyText.select();
+            document.execCommand("copy");
+            alert("Texto copiado: " + copyText.value);
+        }
+
+        // Actualizar dirección de depósito USDT
         function updateUSDTAddress() {
             const network = document.getElementById("usdt-network").value;
             const depositAddress = document.getElementById("deposit-address");
@@ -248,80 +298,24 @@
             }
         }
 
-        // Función para copiar el texto
-        function copyText(elementId) {
-            const copyText = document.getElementById(elementId);
-            copyText.select();
-            document.execCommand("copy");
-        }
-
-        // Función para guardar el depósito
-        function saveDeposit() {
+        // Cambiar campos según moneda seleccionada
+        function toggleDepositFields() {
             const depositType = document.getElementById("deposit-type").value;
-            const amount = depositType === "ARS" ? document.getElementById("deposit-ars").value : document.getElementById("deposit-usdt").value;
-            const status = "Pendiente";
-            const currency = depositType === "ARS" ? "ARS" : "USDT";
-            const depositHistoryList = document.getElementById("deposit-history-list");
-
-            const row = document.createElement("tr");
-            row.innerHTML = `<td>${currency}</td><td>${amount}</td><td>${new Date().toLocaleString()}</td><td class="status-pending">${status}</td>`;
-            depositHistoryList.appendChild(row);
-
-            alert("Depósito guardado con éxito.");
-            document.getElementById("deposit-screen").style.display = "none";
-            document.getElementById("welcome-screen").style.display = "block";
-        }
-
-        // Función para ver el historial de depósitos
-        function showDepositHistory() {
-            document.getElementById("deposit-screen").style.display = "none";
-            document.getElementById("deposit-history").style.display = "block";
-        }
-
-        // Función de login
-        function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            if (username === "Brian95s" && password === "Demian31") {
-                document.getElementById("user-name").innerText = username;
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("welcome-screen").style.display = "block";
+            if (depositType === "ARS") {
+                document.getElementById("ars-fields").style.display = "block";
+                document.getElementById("usdt-fields").style.display = "none";
             } else {
-                alert("Usuario o contraseña incorrectos.");
+                document.getElementById("ars-fields").style.display = "none";
+                document.getElementById("usdt-fields").style.display = "block";
+                updateUSDTAddress(); // Actualizar la dirección de USDT
             }
         }
 
-        // Función de logout
-        function logout() {
-            document.getElementById("login-screen").style.display = "block";
-            document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("profile-screen").style.display = "none";
-        }
-
-        // Toggle del menú
-        function toggleMenu(event) {
-            event.stopPropagation();
-            const menu = document.getElementById("menu");
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
-        }
-
-        // Cerrar el menú si haces clic fuera de él
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById("menu");
-            const menuIcon = document.querySelector(".menu-icon");
-
-            if (!menu.contains(event.target) && !menuIcon.contains(event.target)) {
-                menu.style.display = "none";
-            }
-        });
-
-        // Función para mostrar el perfil
-        function showProfile() {
-            document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("profile-screen").style.display = "block";
+        // Guardar depósito (solo un ejemplo)
+        function saveDeposit() {
+            alert("Depósito guardado con éxito.");
+            // Aquí debes agregar la lógica para guardar el depósito en el historial o base de datos
         }
     </script>
-
 </body>
 </html>
