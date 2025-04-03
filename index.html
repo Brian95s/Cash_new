@@ -72,15 +72,6 @@
         .menu ul li:hover {
             background-color: #218838;
         }
-        /* Menú desplegable */
-        .menu-icon {
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .menu-icon img {
-            width: 30px;
-            height: 30px;
-        }
         /* Estilo para la pantalla de bienvenida */
         .background {
             background-color: #87CEEB;
@@ -248,6 +239,7 @@
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
+            // Verificación de credenciales
             if (username === "Brian95s" && password === "Demian31") {
                 currentUser = username;
                 showWelcomeScreen();
@@ -292,4 +284,12 @@
         function saveProfile() {
             userInfo.name = document.getElementById("profile-name").value;
             userInfo.age = document.getElementById("profile-age").value;
-            userInfo
+            userInfo.country = document.getElementById("profile-country").value;
+            userInfo.phone = document.getElementById("profile-phone").value;
+            userInfo.withdrawalPassword = document.getElementById("profile-withdrawal-password").value;
+
+            alert("Perfil guardado correctamente.");
+        }
+    </script>
+</body>
+</html>
