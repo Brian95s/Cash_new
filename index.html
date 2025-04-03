@@ -20,12 +20,12 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            margin-top: 100px;
         }
         h1 {
             text-align: center;
         }
-        input, select {
+        input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -79,45 +79,58 @@
             text-align: center;
             padding-top: 100px;
         }
-        .input-group {
-            margin-bottom: 20px;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .input-group input, .input-group select {
-            margin-bottom: 10px;
-        }
-        .copy-btn {
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-        }
-        .arrow-btn {
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-        }
-        .history {
-            background-color: #fff;
-            padding: 15px;
+
+        /* Estilos de fondo y texto para depósito e historial */
+        .deposit-container, .deposit-history {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
             margin-top: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
-        .history h2 {
-            text-align: center;
+
+        .deposit-history table {
+            width: 100%;
+            color: #fff;
+            border-collapse: collapse;
         }
-        .history ul {
-            list-style: none;
-            padding: 0;
+
+        .deposit-history th, .deposit-history td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #fff;
         }
-        .history ul li {
-            border-bottom: 1px solid #ddd;
-            padding: 10px 0;
+
+        .status-pending {
+            color: orange;
         }
-        .history ul li:last-child {
-            border-bottom: none;
+
+        .status-approved {
+            color: green;
+        }
+
+        .status-rejected {
+            color: red;
+        }
+
+        .blue-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            margin-top: 10px;
+        }
+
+        .copy-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -133,6 +146,7 @@
 
     <!-- Pantalla Principal -->
     <div class="background" id="welcome-screen" style="display:none;">
+        <!-- Menú desplegable -->
         <div class="menu-icon" onclick="toggleMenu(event)">
             <span style="font-size: 30px;">&#9776; Menú</span>
         </div>
@@ -149,79 +163,121 @@
         <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
     </div>
 
-    <!-- Perfil -->
-    <div class="container" id="profile-screen" style="display:none;">
-        <h2>Perfil</h2>
-        <label>Nombre y Apellidos:</label>
-        <input type="text" id="profile-name" value="Brian Gabriel" readonly />
-        <label>Edad:</label>
-        <input type="number" id="profile-age" value="28" readonly />
-        <label>País:</label>
-        <input type="text" id="profile-country" value="Argentina" readonly />
-        <label>Número de Celular:</label>
-        <input type="text" id="profile-phone" value="123456789" readonly />
-        <label>Contraseña de Retiro:</label>
-        <input type="password" id="profile-withdrawal-password" value="******" readonly />
-        <button class="green" onclick="editProfile()">Editar</button>
-        <button class="red" onclick="saveProfile()">Guardar</button>
-    </div>
-
     <!-- Depósito -->
-    <div class="container" id="deposit-screen" style="display:none;">
+    <div class="container deposit-container" id="deposit-screen" style="display:none;">
         <h2>Depósito</h2>
-        
-        <div class="input-group">
-            <label for="deposit-type">Seleccione el tipo de depósito:</label>
-            <select id="deposit-type" onchange="updateDepositFields()">
-                <option value="ars">Pesos Argentinos (ARS)</option>
-                <option value="usdt">USDT</option>
-            </select>
-        </div>
+        <label for="deposit-type">Selecciona Moneda:</label>
+        <select id="deposit-type" onchange="toggleDepositFields()">
+            <option value="ARS">Pesos Argentinos (ARS)</option>
+            <option value="USDT">USDT</option>
+        </select>
 
-        <!-- Campos para depósito en Pesos Argentinos -->
-        <div id="ars-fields" class="input-group">
-            <label>Monto a Depositar:</label>
-            <input type="number" id="ars-amount" placeholder="Monto en ARS" />
-            <label>CBU:</label>
-            <input type="text" value="0070361930004017951525" readonly />
-            <button class="copy-btn" onclick="copyText('ars-cbu')">Copiar</button>
-            <label>A nombre de:</label>
-            <input type="text" id="ars-name" placeholder="Nombre del titular" />
-        </div>
-
-        <!-- Campos para depósito en USDT -->
-        <div id="usdt-fields" class="input-group" style="display:none;">
-            <label>Seleccione Red:</label>
-            <select id="usdt-network">
-                <option value="bep20">BEP20</option>
-                <option value="trc20">TRC20</option>
-            </select>
-            <label>Dirección:</label>
-            <input type="text" id="usdt-address" readonly />
-            <button class="copy-btn" onclick="copyText('usdt-address')">Copiar</button>
-            <label>Monto a Depositar:</label>
-            <input type="number" id="usdt-amount" placeholder="Monto en USDT" />
-        </div>
-
-        <div class="input-group">
+        <!-- Pesos Argentinos -->
+        <div id="ars-fields" style="display:none;">
+            <label>Monto a Depositar (ARS):</label>
+            <input type="number" id="deposit-ars" />
+            <label>CBU para Transferencia:</label>
+            <input type="text" id="deposit-cbu" value="0070361930004017951525" readonly />
+            <button class="copy-btn" onclick="copyText('deposit-cbu')">Copiar</button>
+            <label>Nombre y Apellido de quien transfiere:</label>
+            <input type="text" id="deposit-name" />
             <label>Tiempo estimado para que se refleje el depósito:</label>
-            <p id="deposit-time">Para ARS: 15 minutos a 48 horas | Para USDT: 10 minutos a 5 horas</p>
+            <p>15 minutos a 48 horas</p>
         </div>
 
-        <button class="red" onclick="saveDeposit()">Guardar</button>
-        <button class="arrow-btn" onclick="showDepositHistory()">&#8594; Ver Historial de Depósitos</button>
+        <!-- USDT -->
+        <div id="usdt-fields" style="display:none;">
+            <label>Monto a Depositar (USDT):</label>
+            <input type="number" id="deposit-usdt" />
+            <label>Selecciona Red:</label>
+            <select id="usdt-network" onchange="updateUSDTAddress()">
+                <option value="BEP20">BEP20</option>
+                <option value="TRC20">TRC20</option>
+            </select>
+            <label>Dirección para Depósito:</label>
+            <input type="text" id="deposit-address" readonly />
+            <button class="copy-btn" onclick="copyText('deposit-address')">Copiar</button>
+            <label>Tiempo estimado para que se refleje el depósito:</label>
+            <p>10 minutos a 5 horas</p>
+        </div>
+
+        <button class="green" onclick="saveDeposit()">Guardar</button>
+        <button class="blue-btn" onclick="showDepositHistory()">Ver Historial de Depósitos</button>
     </div>
 
     <!-- Historial de Depósitos -->
-    <div id="deposit-history" class="history" style="display:none;">
-        <h2>Historial de Depósitos</h2>
-        <ul>
-            <li><strong>Tipo:</strong> ARS | <strong>Fecha:</strong> 2025-04-03 | <strong>Estado:</strong> Completo</li>
-            <li><strong>Tipo:</strong> USDT | <strong>Fecha:</strong> 2025-04-02 | <strong>Estado:</strong> Pendiente</li>
-        </ul>
+    <div class="deposit-history" id="deposit-history" style="display:none;">
+        <h3>Historial de Depósitos</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo de Moneda</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="deposit-history-list">
+                <!-- Aquí se llenarán los depósitos -->
+            </tbody>
+        </table>
     </div>
 
     <script>
+        // Función para cambiar los campos según la moneda seleccionada
+        function toggleDepositFields() {
+            const depositType = document.getElementById("deposit-type").value;
+            if (depositType === "ARS") {
+                document.getElementById("ars-fields").style.display = "block";
+                document.getElementById("usdt-fields").style.display = "none";
+            } else if (depositType === "USDT") {
+                document.getElementById("ars-fields").style.display = "none";
+                document.getElementById("usdt-fields").style.display = "block";
+                updateUSDTAddress(); // Actualizar la dirección de depósito de USDT
+            }
+        }
+
+        // Actualizar dirección de USDT según la red seleccionada
+        function updateUSDTAddress() {
+            const network = document.getElementById("usdt-network").value;
+            const depositAddress = document.getElementById("deposit-address");
+            if (network === "BEP20") {
+                depositAddress.value = "0x9748Fbc81045609Ab16583677eB5A75c73d1DeEf";
+            } else if (network === "TRC20") {
+                depositAddress.value = "TSk2FGNVPiosWizFxNkkhWu2C9HArRvK5D";
+            }
+        }
+
+        // Función para copiar el texto
+        function copyText(elementId) {
+            const copyText = document.getElementById(elementId);
+            copyText.select();
+            document.execCommand("copy");
+        }
+
+        // Función para guardar el depósito
+        function saveDeposit() {
+            const depositType = document.getElementById("deposit-type").value;
+            const amount = depositType === "ARS" ? document.getElementById("deposit-ars").value : document.getElementById("deposit-usdt").value;
+            const status = "Pendiente";
+            const currency = depositType === "ARS" ? "ARS" : "USDT";
+            const depositHistoryList = document.getElementById("deposit-history-list");
+
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${currency}</td><td>${amount}</td><td>${new Date().toLocaleString()}</td><td class="status-pending">${status}</td>`;
+            depositHistoryList.appendChild(row);
+
+            alert("Depósito guardado con éxito.");
+            document.getElementById("deposit-screen").style.display = "none";
+            document.getElementById("welcome-screen").style.display = "block";
+        }
+
+        // Función para ver el historial de depósitos
+        function showDepositHistory() {
+            document.getElementById("deposit-screen").style.display = "none";
+            document.getElementById("deposit-history").style.display = "block";
+        }
+
         // Función de login
         function login() {
             const username = document.getElementById("username").value;
@@ -241,13 +297,11 @@
             document.getElementById("login-screen").style.display = "block";
             document.getElementById("welcome-screen").style.display = "none";
             document.getElementById("profile-screen").style.display = "none";
-            document.getElementById("deposit-screen").style.display = "none";
-            document.getElementById("deposit-history").style.display = "none";
         }
 
         // Toggle del menú
         function toggleMenu(event) {
-            event.stopPropagation(); // Evitar que se cierre el menú cuando se hace clic en el botón de las tres líneas
+            event.stopPropagation();
             const menu = document.getElementById("menu");
             menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
@@ -258,7 +312,7 @@
             const menuIcon = document.querySelector(".menu-icon");
 
             if (!menu.contains(event.target) && !menuIcon.contains(event.target)) {
-                menu.style.display = "none"; // Cerrar el menú si el clic es fuera del menú y el ícono
+                menu.style.display = "none";
             }
         });
 
@@ -266,60 +320,6 @@
         function showProfile() {
             document.getElementById("welcome-screen").style.display = "none";
             document.getElementById("profile-screen").style.display = "block";
-        }
-
-        // Función para mostrar el depósito
-        function showDeposit() {
-            document.getElementById("welcome-screen").style.display = "none";
-            document.getElementById("deposit-screen").style.display = "block";
-        }
-
-        // Función para editar perfil
-        function editProfile() {
-            document.getElementById("profile-name").removeAttribute("readonly");
-            document.getElementById("profile-age").removeAttribute("readonly");
-            document.getElementById("profile-country").removeAttribute("readonly");
-            document.getElementById("profile-phone").removeAttribute("readonly");
-            document.getElementById("profile-withdrawal-password").removeAttribute("readonly");
-        }
-
-        // Función para guardar perfil
-        function saveProfile() {
-            alert("Perfil guardado con éxito.");
-            document.getElementById("profile-screen").style.display = "none";
-            document.getElementById("welcome-screen").style.display = "block";
-        }
-
-        // Actualizar campos según tipo de depósito
-        function updateDepositFields() {
-            const depositType = document.getElementById("deposit-type").value;
-            if (depositType === "ars") {
-                document.getElementById("ars-fields").style.display = "block";
-                document.getElementById("usdt-fields").style.display = "none";
-            } else {
-                document.getElementById("ars-fields").style.display = "none";
-                document.getElementById("usdt-fields").style.display = "block";
-            }
-        }
-
-        // Copiar texto al portapapeles
-        function copyText(id) {
-            const copyText = document.getElementById(id);
-            copyText.select();
-            document.execCommand("copy");
-            alert("Texto copiado!");
-        }
-
-        // Función para guardar depósito
-        function saveDeposit() {
-            alert("Depósito guardado con éxito.");
-            document.getElementById("deposit-screen").style.display = "none";
-            document.getElementById("welcome-screen").style.display = "block";
-        }
-
-        // Función para mostrar historial de depósitos
-        function showDepositHistory() {
-            document.getElementById("deposit-history").style.display = "block";
         }
     </script>
 
