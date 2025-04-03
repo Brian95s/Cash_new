@@ -23,7 +23,6 @@
             margin-top: 100px;
         }
         h1 {
-            font-size: 24px;
             text-align: center;
         }
         input {
@@ -38,30 +37,31 @@
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
+            border: none;
         }
         button.green {
             background-color: #28a745;
             color: white;
-            border: none;
         }
         button.red {
             background-color: #dc3545;
             color: white;
-            border: none;
         }
-        p {
-            text-align: center;
-        }
-        /* Menú */
-        .menu {
+        .menu-icon {
             position: absolute;
             top: 20px;
             left: 20px;
+            cursor: pointer;
+        }
+        .menu {
             display: none;
-            background-color: #28a745;
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            background: white;
             width: 200px;
-            border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
         }
         .menu ul {
             list-style: none;
@@ -70,60 +70,14 @@
         }
         .menu ul li {
             padding: 10px;
-            background-color: #28a745;
-            margin-bottom: 5px;
             cursor: pointer;
-            color: white;
-            border-radius: 5px;
+            border-bottom: 1px solid #ccc;
         }
-        .menu ul li:hover {
-            background-color: #218838;
-        }
-        /* Estilo para la pantalla de bienvenida */
         .background {
             background-color: #87CEEB;
             height: 100vh;
-        }
-        #welcome-screen {
             text-align: center;
-            padding-top: 150px;
-        }
-        #welcome-screen h1 {
-            font-size: 36px;
-            color: #fff;
-        }
-        .container a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .user-info {
-            display: none;
-            position: absolute;
-            top: 100px;
-            left: 70px;
-            background-color: white;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .user-info p {
-            margin: 5px 0;
-        }
-        /* Estilo para perfil editable */
-        .profile-info {
-            display: block;
-            margin-bottom: 20px;
-        }
-        .profile-info input {
-            width: 80%;
-            margin-bottom: 10px;
-        }
-        .profile-info button {
-            width: auto;
-        }
-        .profile-info .button-container {
-            display: flex;
-            justify-content: space-between;
+            padding-top: 100px;
         }
     </style>
 </head>
@@ -135,37 +89,15 @@
         <input type="text" id="username" placeholder="Usuario" />
         <input type="password" id="password" placeholder="Contraseña" />
         <button onclick="login()">Iniciar Sesión</button>
-        <p><a href="javascript:void(0);" onclick="showRegister()">¿No tienes cuenta? Regístrate</a></p>
-        <p><a href="javascript:void(0);" onclick="showForgotPassword()">¿Olvidaste tu contraseña?</a></p>
     </div>
 
-    <!-- Registro -->
-    <div class="container" id="register-screen" style="display:none;">
-        <h1>Registro</h1>
-        <input type="email" id="register-email" placeholder="Correo Electrónico" />
-        <input type="text" id="register-username" placeholder="Usuario" />
-        <input type="password" id="register-password" placeholder="Contraseña" />
-        <button onclick="register()">Registrarse</button>
-        <p><a href="javascript:void(0);" onclick="showLogin()">¿Ya tienes cuenta? Inicia sesión</a></p>
-    </div>
-
-    <!-- Recuperación de Contraseña -->
-    <div class="container" id="forgot-password-screen" style="display:none;">
-        <h1>Recuperar Contraseña</h1>
-        <input type="email" id="forgot-email" placeholder="Correo Electrónico" />
-        <button onclick="sendRecoveryLink()">Enviar enlace de recuperación</button>
-        <p><a href="javascript:void(0);" onclick="showLogin()">Volver al inicio de sesión</a></p>
-    </div>
-
-    <!-- Pantalla Principal (después de loguearse) -->
+    <!-- Pantalla Principal -->
     <div class="background" id="welcome-screen" style="display:none;">
-        <!-- Menú desplegable -->
         <div class="menu-icon" onclick="toggleMenu()">
             <span style="font-size: 30px;">&#9776; Menú</span>
         </div>
         <div class="menu" id="menu">
             <ul>
-                <li onclick="showUserInfo()">Mi Información</li>
                 <li onclick="showProfile()">Perfil</li>
                 <li>Depósitos</li>
                 <li>Retiros</li>
@@ -174,89 +106,75 @@
                 <li onclick="logout()">Cerrar sesión</li>
             </ul>
         </div>
-
         <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
-        <div class="menu-icon">
-            <span style="font-size: 40px;">👤</span>
-        </div>
+    </div>
+
+    <!-- Perfil -->
+    <div class="container" id="profile-screen" style="display:none;">
+        <h2>Perfil</h2>
+        <label>Nombre y Apellidos:</label>
+        <input type="text" id="profile-name" value="Brian Gabriel" readonly />
         
-        <!-- Información del Usuario -->
-        <div class="user-info" id="user-info">
-            <p><strong>Nombre:</strong> <span id="user-full-name">Usuario</span></p>
-            <p><strong>Fecha de Registro:</strong> <span id="user-registration-date">01/01/2023</span></p>
-            <button onclick="hideUserInfo()">Cerrar</button>
-        </div>
+        <label>Edad:</label>
+        <input type="number" id="profile-age" value="28" readonly />
         
-        <!-- Perfil -->
-        <div class="container" id="profile-screen" style="display:none;">
-            <h2>Perfil</h2>
-            <div class="profile-info">
-                <label for="profile-name">Nombre y Apellidos:</label>
-                <input type="text" id="profile-name" value="Brian Gabriel" readonly />
-                
-                <label for="profile-age">Edad:</label>
-                <input type="number" id="profile-age" value="28" readonly />
-                
-                <label for="profile-country">País:</label>
-                <input type="text" id="profile-country" value="Argentina" readonly />
-                
-                <label for="profile-phone">Número de Celular:</label>
-                <input type="text" id="profile-phone" value="123456789" readonly />
-                
-                <label for="profile-withdrawal-password">Contraseña de Retiro:</label>
-                <input type="password" id="profile-withdrawal-password" value="******" readonly />
-                
-                <div class="button-container">
-                    <button class="green" onclick="editProfile()">Editar</button>
-                    <button class="red" onclick="saveProfile()">Guardar</button>
-                </div>
-            </div>
-        </div>
+        <label>País:</label>
+        <input type="text" id="profile-country" value="Argentina" readonly />
+        
+        <label>Número de Celular:</label>
+        <input type="text" id="profile-phone" value="123456789" readonly />
+        
+        <label>Contraseña de Retiro:</label>
+        <input type="password" id="profile-withdrawal-password" value="******" readonly />
+        
+        <button class="green" onclick="editProfile()">Editar</button>
+        <button class="red" onclick="saveProfile()">Guardar</button>
     </div>
 
     <script>
-        // Variables
-        let currentUser = null;
-        let registrationDate = "01/01/2023"; // Fecha de registro simulada
-        let userInfo = {
-            name: "Brian Gabriel",
-            age: 28,
-            country: "Argentina",
-            phone: "123456789",
-            withdrawalPassword: "******"
-        };
-
-        // Función para mostrar la pantalla de login
-        function showLogin() {
-            document.getElementById("login-screen").style.display = "block";
-            document.getElementById("register-screen").style.display = "none";
-            document.getElementById("forgot-password-screen").style.display = "none";
-            document.getElementById("welcome-screen").style.display = "none";
-        }
-
-        // Función para mostrar la pantalla de registro
-        function showRegister() {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("register-screen").style.display = "block";
-            document.getElementById("forgot-password-screen").style.display = "none";
-        }
-
-        // Función para mostrar la pantalla de recuperación de contraseña
-        function showForgotPassword() {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("forgot-password-screen").style.display = "block";
-        }
-
-        // Función para enviar enlace de recuperación (simulación)
-        function sendRecoveryLink() {
-            alert("Enlace de recuperación enviado.");
-        }
-
-        // Función para iniciar sesión
         function login() {
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
 
-            // Simulación de inicio de sesión (usuario: Brian95s, contraseña: Demian31)
             if (username === "Brian95s" && password === "Demian31") {
-                currentUser
+                document.getElementById("user-name").innerText = username;
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("welcome-screen").style.display = "block";
+            } else {
+                alert("Usuario o contraseña incorrectos.");
+            }
+        }
+
+        function logout() {
+            document.getElementById("login-screen").style.display = "block";
+            document.getElementById("welcome-screen").style.display = "none";
+            document.getElementById("profile-screen").style.display = "none";
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById("menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        function showProfile() {
+            document.getElementById("welcome-screen").style.display = "none";
+            document.getElementById("profile-screen").style.display = "block";
+        }
+
+        function editProfile() {
+            document.getElementById("profile-name").removeAttribute("readonly");
+            document.getElementById("profile-age").removeAttribute("readonly");
+            document.getElementById("profile-country").removeAttribute("readonly");
+            document.getElementById("profile-phone").removeAttribute("readonly");
+            document.getElementById("profile-withdrawal-password").removeAttribute("readonly");
+        }
+
+        function saveProfile() {
+            alert("Cargado con éxito.");
+            document.getElementById("profile-screen").style.display = "none";
+            document.getElementById("welcome-screen").style.display = "block";
+        }
+    </script>
+
+</body>
+    </html>
