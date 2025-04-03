@@ -79,41 +79,21 @@
             text-align: center;
             padding-top: 100px;
         }
-        .deposit-form {
+        .profile-form {
             display: flex;
             flex-direction: column;
         }
-        .deposit-form label {
+        .profile-form label {
             margin-bottom: 5px;
         }
-        .deposit-form input {
+        .profile-form input {
             margin-bottom: 15px;
         }
-        .deposit-history {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+        .profile-form button {
+            background-color: #ffc107;
         }
-        .deposit-history table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .deposit-history table, th, td {
-            border: 1px solid #ddd;
-        }
-        .deposit-history th, td {
-            padding: 8px;
-            text-align: center;
-        }
-        .deposit-history .status {
-            color: green;
-        }
-        .deposit-history .pending {
-            color: orange;
-        }
-        .deposit-history .rejected {
-            color: red;
+        .profile-form button:disabled {
+            background-color: #ccc;
         }
     </style>
 </head>
@@ -136,6 +116,29 @@
             </ul>
         </div>
         <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
+    </div>
+
+    <!-- Perfil -->
+    <div class="container" id="profile-screen" style="display:none;">
+        <h2>Perfil</h2>
+        
+        <!-- Formulario de Perfil -->
+        <div class="profile-form">
+            <label for="user-name-input">Nombre:</label>
+            <input type="text" id="user-name-input" value="Juan Pérez" readonly />
+            
+            <label for="user-age-input">Edad:</label>
+            <input type="text" id="user-age-input" value="30" readonly />
+            
+            <label for="user-country-input">País:</label>
+            <input type="text" id="user-country-input" value="Argentina" readonly />
+            
+            <label for="user-phone-input">Teléfono:</label>
+            <input type="text" id="user-phone-input" value="11-1234-5678" readonly />
+            
+            <button class="green" id="edit-profile-btn" onclick="toggleEditProfile()">Editar Perfil</button>
+            <button class="green" id="save-profile-btn" onclick="saveProfile()" disabled>Guardar Perfil</button>
+        </div>
     </div>
 
     <!-- Depósitos -->
@@ -223,39 +226,44 @@
     </div>
 
     <script>
-        // Función para mostrar el formulario de depósito
-        function toggleDepositForm() {
-            const depositType = document.getElementById("deposit-type").value;
-            if (depositType === "ARS") {
-                document.getElementById("ars-form").style.display = "block";
-                document.getElementById("usdt-form").style.display = "none";
+        // Función para habilitar/deshabilitar campos de perfil
+        function toggleEditProfile() {
+            const isEditing = document.getElementById("edit-profile-btn").textContent === "Editar Perfil";
+            if (isEditing) {
+                // Cambiar a modo de edición
+                document.getElementById("user-name-input").readOnly = false;
+                document.getElementById("user-age-input").readOnly = false;
+                document.getElementById("user-country-input").readOnly = false;
+                document.getElementById("user-phone-input").readOnly = false;
+                document.getElementById("edit-profile-btn").textContent = "Cancelar Edición";
+                document.getElementById("save-profile-btn").disabled = false;
             } else {
-                document.getElementById("ars-form").style.display = "none";
-                document.getElementById("usdt-form").style.display = "block";
+                // Cancelar edición
+                document.getElementById("user-name-input").readOnly = true;
+                document.getElementById("user-age-input").readOnly = true;
+                document.getElementById("user-country-input").readOnly = true;
+                document.getElementById("user-phone-input").readOnly = true;
+                document.getElementById("edit-profile-btn").textContent = "Editar Perfil";
+                document.getElementById("save-profile-btn").disabled = true;
             }
         }
 
-        // Función para realizar un depósito
-        function submitDeposit(type) {
-            if (type === 'ARS') {
-                const amount = document.getElementById("ars-amount").value;
-                const cbu = document.getElementById("ars-cbu").value;
-                const senderName = document.getElementById("ars-sender-name").value;
-                alert(`Depósito de ${amount} ARS realizado exitosamente.`);
-            } else if (type === 'USDT') {
-                const amount = document.getElementById("usdt-amount").value;
-                const network = document.getElementById("usdt-network").value;
-                const address = document.getElementById("usdt-address").value;
-                alert(`Depósito de ${amount} USDT realizado en red ${network}.`);
-            }
+        // Función para guardar el perfil editado
+        function saveProfile() {
+            const name = document.getElementById("user-name-input").value;
+            const age = document.getElementById("user-age-input").value;
+            const country = document.getElementById("user-country-input").value;
+            const phone = document.getElementById("user-phone-input").value;
+
+            // Aquí iría la lógica para guardar el perfil (por ejemplo, enviarlo al servidor)
+            alert(`Perfil actualizado: ${name}, ${age} años, ${country}, ${phone}`);
+            toggleEditProfile(); // Cerrar la edición automáticamente
         }
 
-        // Función para copiar la dirección de USDT
-        function copyAddress() {
-            const addressField = document.getElementById("usdt-address");
-            addressField.select();
-            document.execCommand("copy");
-            alert("Dirección copiada al portapapeles.");
+        // Mostrar perfil
+        function showProfile() {
+            document.getElementById("welcome-screen").style.display = "none";
+            document.getElementById("profile-screen").style.display = "block";
         }
 
         // Mostrar pantalla de depósitos
