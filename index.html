@@ -8,65 +8,109 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            color: #fff;
-        }
-        .login-background {
-            background: url('file-R36tHDFPQCYxs6UED31cuY') no-repeat center center/cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .main-background {
-            background: url('file-CSc8iNmmjzXE7s7dd9C2Gi') no-repeat center center/cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .container {
-            width: 90%;
-            max-width: 400px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-        h1 {
-            text-align: center;
-        }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: none;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            cursor: pointer;
-        }
-    </style>
+            color: #333;
+        }/* Fondo para la pantalla de inicio de sesión */
+    #login-screen {
+        background: url('/mnt/data/file-R36tHDFPQCYxs6UED31cuY') no-repeat center center;
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .container {
+        width: 90%;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+    
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    p {
+        text-align: center;
+    }
+    
+    /* Fondo para la pantalla principal */
+    #welcome-screen {
+        background: url('/mnt/data/file-CSc8iNmmjzXE7s7dd9C2Gi') no-repeat center center;
+        background-size: cover;
+        height: 100vh;
+        display: none;
+        text-align: center;
+        padding-top: 150px;
+        color: white;
+    }
+    
+    .menu-icon {
+        margin-top: 10px;
+        cursor: pointer;
+    }
+    
+    .user-info {
+        display: none;
+        position: absolute;
+        top: 100px;
+        left: 70px;
+        background-color: white;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
 </head>
-<body>
-    <!-- Pantalla de Inicio de Sesión -->
-    <div class="login-background" id="login-screen">
-        <div class="container">
-            <h1>Inicio de Sesión</h1>
-            <input type="text" id="username" placeholder="Usuario" />
-            <input type="password" id="password" placeholder="Contraseña" />
-            <button onclick="login()">Iniciar Sesión</button>
-        </div>
-    </div><!-- Pantalla Principal -->
-<div class="main-background" id="main-screen" style="display: none;">
-    <h1>Bienvenido</h1>
+<body><!-- Inicio de sesión -->
+<div class="container" id="login-screen">
+    <h1>Inicio de Sesión</h1>
+    <input type="text" id="username" placeholder="Usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button onclick="login()">Iniciar Sesión</button>
+    <p><a href="javascript:void(0);" onclick="showRegister()">¿No tienes cuenta? Regístrate</a></p>
+    <p><a href="javascript:void(0);" onclick="showForgotPassword()">¿Olvidaste tu contraseña?</a></p>
+</div>
+
+<!-- Pantalla Principal (después de loguearse) -->
+<div id="welcome-screen">
+    <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
 </div>
 
 <script>
     function login() {
-        document.getElementById("login-screen").style.display = "none";
-        document.getElementById("main-screen").style.display = "flex";
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username && password) {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("welcome-screen").style.display = "block";
+            document.getElementById("user-name").textContent = username;
+        } else {
+            alert("Usuario o contraseña incorrectos");
+        }
     }
 </script>
 
