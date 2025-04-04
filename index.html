@@ -6,17 +6,57 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff7e5f;
+            color: white;
+            cursor: pointer;
+        }
+        a {
+            color: #feb47b;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="login-box">
-            <h2 id="form-title">Iniciar Sesión</h2>
-            <input type="email" id="email" placeholder="Correo electrónico" required>
-            <input type="password" id="password" placeholder="Contraseña" required>
-            <button onclick="authenticate()" id="auth-button">Iniciar Sesión</button>
-            <p><a href="#" onclick="toggleForm()">¿No tienes cuenta? Regístrate</a></p>
-            <p><a href="#" onclick="resetPassword()">¿Olvidaste tu contraseña?</a></p>
-        </div>
+        <h2 id="form-title">Iniciar Sesión</h2>
+        <input type="text" id="username" placeholder="Nombre de usuario" style="display: none;">
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button onclick="authenticate()" id="auth-button">Iniciar Sesión</button>
+        <p><a href="#" onclick="toggleForm()" id="toggle-link">¿No tienes cuenta? Regístrate</a></p>
+        <p><a href="#" onclick="resetPassword()">¿Olvidaste tu contraseña?</a></p>
     </div><script>
     const firebaseConfig = {
         apiKey: "TU_API_KEY",
@@ -35,11 +75,14 @@
         isRegistering = !isRegistering;
         document.getElementById("form-title").innerText = isRegistering ? "Registro" : "Iniciar Sesión";
         document.getElementById("auth-button").innerText = isRegistering ? "Registrarse" : "Iniciar Sesión";
+        document.getElementById("toggle-link").innerText = isRegistering ? "¿Ya tienes cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate";
+        document.getElementById("username").style.display = isRegistering ? "block" : "none";
     }
 
     function authenticate() {
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
+        const username = document.getElementById("username").value;
         
         if (isRegistering) {
             auth.createUserWithEmailAndPassword(email, password)
