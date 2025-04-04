@@ -1,9 +1,247 @@
-import React, { useState } from 'react'; import { useNavigate } from 'react-router-dom'; import './Login.css'; // Asegúrate de que este archivo contiene los estilos adecuados import loginBackground from './images/login-background.jpg'; // Imagen de fondo de login
+<!DOCTYPE html><html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Exprés - Plataforma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-image: url('login-background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 100px;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        p {
+            text-align: center;
+        }
+        .menu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: none;
+            background-color: #28a745;
+            width: 200px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .menu ul li {
+            padding: 10px;
+            background-color: #28a745;
+            margin-bottom: 5px;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+        }
+        .menu ul li:hover {
+            background-color: #218838;
+        }
+        .menu-icon {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .menu-icon img {
+            width: 30px;
+            height: 30px;
+        }
+        .background {
+            background-image: url('main-background.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+        #welcome-screen {
+            text-align: center;
+            padding-top: 150px;
+        }
+        #welcome-screen h1 {
+            font-size: 36px;
+            color: #fff;
+        }
+        .container a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .user-info {
+            display: none;
+            position: absolute;
+            top: 100px;
+            left: 70px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .user-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-screen">
+        <h1>Cash Exprés</h1>
+        <input type="text" id="username" placeholder="Usuario" />
+        <input type="password" id="password" placeholder="Contraseña" />
+        <button onclick="login()">Iniciar Sesión</button>
+        <p><a href="javascript:void(0);" onclick="showRegister()">¿No tienes cuenta? Regístrate</a></p>
+        <p><a href="javascript:void(0);" onclick="showForgotPassword()">¿Olvidaste tu contraseña?</a></p>
+    </div><div class="container" id="register-screen" style="display:none;">
+    <h1>Registro</h1>
+    <input type="email" id="register-email" placeholder="Correo Electrónico" />
+    <input type="text" id="register-username" placeholder="Usuario" />
+    <input type="password" id="register-password" placeholder="Contraseña" />
+    <button onclick="register()">Registrarse</button>
+    <p><a href="javascript:void(0);" onclick="showLogin()">¿Ya tienes cuenta? Inicia sesión</a></p>
+</div>
 
-function Login() { const [username, setUsername] = useState(''); const [password, setPassword] = useState(''); const navigate = useNavigate();
+<div class="container" id="forgot-password-screen" style="display:none;">
+    <h1>Recuperar Contraseña</h1>
+    <input type="email" id="forgot-email" placeholder="Correo Electrónico" />
+    <button onclick="sendRecoveryLink()">Enviar enlace de recuperación</button>
+    <p><a href="javascript:void(0);" onclick="showLogin()">Volver al inicio de sesión</a></p>
+</div>
 
-const handleLogin = (e) => { e.preventDefault(); // Simulación de autenticación if (username === 'admin' && password === '1234') { navigate('/dashboard'); // Redirige a la pantalla principal } else { alert('Usuario o contraseña incorrectos'); } };
+<div class="background" id="welcome-screen" style="display:none;">
+    <div class="menu-icon" onclick="toggleMenu()">
+        <span style="font-size: 30px;">&#9776; Menú</span>
+    </div>
+    <div class="menu" id="menu">
+        <ul>
+            <li onclick="showUserInfo()">Mi Información</li>
+            <li>Perfil</li>
+            <li>Depósitos</li>
+            <li>Retiros</li>
+            <li>Referidos</li>
+            <li>Términos y Condiciones</li>
+            <li onclick="logout()">Cerrar sesión</li>
+        </ul>
+    </div>
+    <h1>¡Éxito! Bienvenido, <span id="user-name">Usuario</span></h1>
+    <div class="menu-icon">
+        <span style="font-size: 40px;">&#128100;</span>
+    </div>
+    <div class="user-info" id="user-info">
+        <p><strong>Nombre:</strong> <span id="user-full-name">Usuario</span></p>
+        <p><strong>Fecha de Registro:</strong> <span id="user-registration-date">01/01/2023</span></p>
+        <button onclick="hideUserInfo()">Cerrar</button>
+    </div>
+</div>
 
-return ( <div className="login-container" style={{ backgroundImage: url(${loginBackground}) }}> <form className="login-form" onSubmit={handleLogin}> <h2>Inicio de Sesión</h2> <input type="text" placeholder="Usuario" value={username} onChange={(e) => setUsername(e.target.value)} /> <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} /> <button type="submit">Iniciar Sesión</button> </form> </div> ); }
+<script>
+    let currentUser = null;
+    let registrationDate = "01/01/2023";
 
-export default Login;
+    function showLogin() {
+        document.getElementById("login-screen").style.display = "block";
+        document.getElementById("register-screen").style.display = "none";
+        document.getElementById("forgot-password-screen").style.display = "none";
+        document.getElementById("welcome-screen").style.display = "none";
+    }
+
+    function showRegister() {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("register-screen").style.display = "block";
+        document.getElementById("forgot-password-screen").style.display = "none";
+    }
+
+    function showForgotPassword() {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("register-screen").style.display = "none";
+        document.getElementById("forgot-password-screen").style.display = "block";
+    }
+
+    function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username === "Brian95s" && password === "Demian31") {
+            currentUser = username;
+            alert("Inicio de sesión exitoso");
+            showWelcomeScreen();
+        } else {
+            alert("Usuario o contraseña incorrectos");
+        }
+    }
+
+    function register() {
+        const email = document.getElementById("register-email").value;
+        const username = document.getElementById("register-username").value;
+        const password = document.getElementById("register-password").value;
+        alert("Registro exitoso. Ahora puedes iniciar sesión.");
+        showLogin();
+    }
+
+    function sendRecoveryLink() {
+        const email = document.getElementById("forgot-email").value;
+        console.log("Usuario solicitó recuperación de contraseña:", email);
+        alert("Te hemos enviado un enlace de recuperación a " + email);
+        showLogin();
+    }
+
+    function showWelcomeScreen() {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("register-screen").style.display = "none";
+        document.getElementById("forgot-password-screen").style.display = "none";
+        document.getElementById("welcome-screen").style.display = "block";
+        document.getElementById("user-name").textContent = currentUser;
+    }
+
+    function showUserInfo() {
+        document.getElementById("user-info").style.display = "block";
+        document.getElementById("user-full-name").textContent = currentUser;
+        document.getElementById("user-registration-date").textContent = registrationDate;
+    }
+
+    function hideUserInfo() {
+        document.getElementById("user-info").style.display = "none";
+    }
+
+    function toggleMenu() {
+        const menu = document.getElementById("menu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    function logout() {
+        currentUser = null;
+        showLogin();
+    }
+</script>
+
+</body>
+  </html>
